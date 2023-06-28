@@ -24,13 +24,13 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model("Person", personSchema);
 
 const createAndSavePerson = (done) => {
-  let newPerson = new Person({
+  const newPerson = new Person({
     name: "Eddie",
     age: 32,
-    favoriteFoods: ["Sausage, Egg and Cheddar Cheese on a Croissant"],
+    favoriteFoods: ["wings"],
   });
 
-  newPerson.save((err, newPerson) => {
+  newPerson.save((err, data) => {
     if (err) {
       console.log("Error");
     } else {
@@ -43,31 +43,26 @@ const createAndSavePerson = (done) => {
           " " +
           "has been saved"
       );
+      done("null", data);
     }
-  }, done("null", newPerson));
+  });
 };
 
-const createManyPeople = (arrayOfPeople, done) => {
-  // let morePeople = new Person(
-  //   {
-  //     name: "John",
-  //     age: 32,
-  //     favoriteFoods: ["Sushi"],
-  //   },
-  //   {
-  //     name: "Heather",
-  //     age: 28,
-  //     favoriteFoods: ["Salmon"],
-  //   },
-  //   {
-  //     name: "Johnny",
-  //     age: 21,
-  //     favoriteFoods: ["Pizza"],
-  //   }
-  // );
+const arrayOfPeople = [
+  { name: "Jesus", age: 33, favoriteFoods: ["wings"] },
+  { name: "Johnny", age: 23, favoriteFoods: ["burger"] },
+  { name: "Ralph", age: 28, favoriteFoods: ["Hibachi"] },
+];
 
-  morePeople.create(arrayOfPeople);
-  done(null /*, data*/);
+const createManyPeople = (arrayOfPeople, done) => {
+  Person.create(arrayOfPeople, (err, muchoPeople) => {
+    if (err) {
+      console.log("Error");
+    } else {
+      console.log("arrayOfPeople created");
+      done("created many", muchoPeople);
+    }
+  });
 };
 
 const findPeopleByName = (personName, done) => {
