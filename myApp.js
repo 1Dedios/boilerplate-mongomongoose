@@ -48,12 +48,6 @@ const createAndSavePerson = (done) => {
   });
 };
 
-const arrayOfPeople = [
-  { name: "Jesus", age: 33, favoriteFoods: ["wings"] },
-  { name: "Johnny", age: 23, favoriteFoods: ["burger"] },
-  { name: "Ralph", age: 28, favoriteFoods: ["Hibachi"] },
-];
-
 const createManyPeople = (arrayOfPeople, done) => {
   Person.create(arrayOfPeople, (err, muchoPeople) => {
     if (err) {
@@ -134,19 +128,47 @@ const findAndUpdate = (personName, done) => {
 };
 
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove(personId, (err, person) => {
+    if (err) {
+      console.log("could not remove the person because they cannot be found");
+    } else {
+      console.log("removing them as we speak");
+      Person.deleteOne(person);
+      done("removed person from database", person);
+    }
+  });
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
 
-  done(null /*, data*/);
+  Person.remove(
+    { name: nameToRemove },
+    (err, nameRemoved) => {
+      if (err) {
+        console.log("could not find the people to remove");
+      } else {
+        console.log("Removing the bulk of people");
+      }
+    },
+    done("those people were removed", nameRemoved)
+  );
 };
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: [foodToSearch] })
+    .sort()
+    .limit(2)
+    .select({ name: 1, age: 0 })
+    .exec((err, food) => {
+      if (err) {
+        console.log("could not find that food");
+      } else {
+        console.log("found that food");
+        Person.find(food);
+      }
+    }, done("food found", food));
 };
 
 /** **Well Done !!**
