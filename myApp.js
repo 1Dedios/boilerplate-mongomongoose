@@ -77,17 +77,41 @@ const findPeopleByName = (personName, done) => {
 };
 
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({ favoriteFoods: food }, (err, food) => {
+    if (err) {
+      console.log("No one likes that here.");
+    } else {
+      console.log("food found");
+      done("find by food", food);
+    }
+  });
 };
 
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById(personId, (err, person) => {
+    if (err) {
+      console.log("could not find that person");
+    } else {
+      console.log("found em");
+      done("person found", person);
+    }
+  });
 };
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
 
-  done(null /*, data*/);
+  Person.findById(personId, (err, person) => {
+    if (err) {
+      console.log(
+        "could not find that person, therefore could not update their favorite foods"
+      );
+    } else {
+      console.log("found them, adding their favorite food");
+      person.favoriteFoods.push(foodToAdd);
+      done("we've added their favorite food", person);
+    }
+  });
 };
 
 const findAndUpdate = (personName, done) => {
