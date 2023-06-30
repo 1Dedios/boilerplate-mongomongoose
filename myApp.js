@@ -117,7 +117,20 @@ const findEditThenSave = (personId, done) => {
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
-  done(null /*, data*/);
+  Person.findOneAndUpdate(
+    personName,
+    (err, nameOfPerson) => {
+      if (err) {
+        console.log("cannot update age because that person does not exist.");
+      } else {
+        console.log("looking for the person to set their age");
+        console.log(`adding ${personName} age now`);
+        nameOfPerson.age = ageToSet;
+        done("set their age", nameOfPerson);
+      }
+    },
+    { new: true }
+  );
 };
 
 const removeById = (personId, done) => {
